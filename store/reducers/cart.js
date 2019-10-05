@@ -32,6 +32,8 @@ export default (state=initialState, action) => {
                 items: {...state.items, [addedProduct.id]: updatedOrNewCartItem}, // can access an property using []
                 totalAmount: state.totalAmount + prodPrice
             }
+        default:
+            return state;
     }
-    return state;
+    
 };
