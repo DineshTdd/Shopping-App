@@ -5,6 +5,7 @@ import HeaderButton from '../../components/UI/HeaderButton';
 
 
 import { HeaderButtons, Item } from  'react-navigation-header-buttons';
+import OrderItem from '../../components/shop/OrderItem';
 
 
 const OrdersScreen = props => {
@@ -15,7 +16,9 @@ const OrdersScreen = props => {
     data ={orders}
     keyExtractor={item => item.id} 
     renderItem={itemData => 
-    <Text>{itemData.item.totalAmount}</Text>}
+    (
+        <OrderItem amount={itemData.item.totalAmount} date={itemData.item.readableDate} />
+    )}
      />
     );
 };
