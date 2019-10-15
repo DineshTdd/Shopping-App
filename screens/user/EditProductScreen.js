@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Platform, Text, ScrollView, TextInput, StyleSheet } from 'react-native';
 import { HeaderButtons, Item } from  'react-navigation-header-buttons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 import HeaderButton from '../../components/UI/HeaderButton';
+import * as productsActions from '../../store/actions/product';
 
 
 const EditProductScreen = props => {
@@ -14,14 +15,21 @@ const EditProductScreen = props => {
         state.products.userProducts.find(prod => prod.id === prodId)
         );
 
+    const dispatch = useDispatch();
     const [title, setTitle] = useState( editedProduct ? editedProduct.title : '');
     const [imageUrl, setImageUrl] = useState( editedProduct ? editedProduct.imageUrl : '');
     const [price, setPrice] = useState( editedProduct ? editedProduct.price : '');
     const [description, setDescription] = useState( editedProduct ? editedProduct.description : '');
 
+    
     const submitHandler = useCallback(() => {
-        console.log('submitting');
-    }, []); //prevents recreation of function and infinite loop prob
+        if (editedProduct) {
+            dispatch(productsActions.updateProduct(prodId, title, description, imageUrl));
+        }
+        else {
+            dispatch(productsActions.createProduct(title, description, imageUrl, +price));
+        }
+    }, [dispatch, prodId, title, description, imageUrl, price]); //prevents recreation of function and infinite loop prob
 
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler });
@@ -32,21 +40,21 @@ const EditProductScreen = props => {
             <View style={styles.form}>
             <View style={styles.formControl}>
             <Text style={styles.label}>Title</Text>
-            <TextInput style={styles.input} value={title} onChange={text => setTitle(text)} />
+            <TextInput style={styles.input} value={title} onChangeText={text => setTitle(text)} />
             </View>
             <View style={styles.formControl}>
             <Text style={styles.label}>Image URL</Text>
-            <TextInput style={styles.input} value={imageUrl} onChange={text => setImageUrl(text)} />
+            <TextInput style={styles.input} value={imageUrl} onChangeText={text => setImageUrl(text)} />
             </View>
             {editedProduct ? null : (
             <View style={styles.formControl}>
             <Text style={styles.label}>Price</Text>
-            <TextInput style={styles.input} value={price} onChange={text => setPrice(text)} />
+            <TextInput style={styles.input} value={price} onChangeText={text => setPrice(text)} />
             </View>
             )}
             <View style={styles.formControl}>
             <Text style={styles.label}>Description</Text>
-            <TextInput style={styles.input} value={description} onChange={text => setDescription(text)} />
+            <TextInput style={styles.input} value={description} onChangeText={text => setDescription(text)} />
             </View>
             </View>
         </ScrollView>
