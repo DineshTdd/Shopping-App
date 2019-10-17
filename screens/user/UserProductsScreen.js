@@ -53,9 +53,7 @@ const UserProductsScreen = props => {
                 <Button 
                     color={Colors.primary}
                     title="Delete" 
-                    onPress={() => {
-                        deleteHandler(itemData.item.id)
-                    }}
+                    onPress={deleteHandler.bind(this, itemData.item.id)}
                 />
                 </ProductItem>
             )} 
