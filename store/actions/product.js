@@ -8,12 +8,34 @@ export const deleteProduct = productId => {
 };
 
 export const createProduct = (title, description, imageUrl, price ) => {
-    return { type: CREATE_PRODUCT, productData: {
-        title,
-        description,
-        imageUrl,
-        price
-        } 
+    return async dispatch =>  {
+        // redux-thunk ..any async without disturbing the flow of redux action
+        const response = await fetch('https://shoppingapprn.firebaseio.com/products.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title,
+                description,
+                imageUrl,
+                price
+            })
+        });
+        // 'aysnc','await' are alternative to 'then' in react native used to resolve promises returned
+
+        const resData = await response.json(); // holds the object id created under 'name' key
+
+        dispatch({
+            type: CREATE_PRODUCT, 
+            productData: {
+                id: resData.name,
+                title,
+                description,
+                imageUrl,
+                price
+            } 
+        });
     };
 };
 
