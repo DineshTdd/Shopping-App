@@ -5,7 +5,7 @@ const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR'; 
 
 const inputReducer = (state, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case INPUT_CHANGE:
             return {
                 ...state,
@@ -20,30 +20,39 @@ const inputReducer = (state, action) => {
         default:
             return state;
     }
+    return state;
 };
 
 const Input = props => {
     const [inputState, dispatch] = useReducer(inputReducer,{
-        value: props.initalValue ? props.initalValue : '',
-        isValid: props.initallyValid,
+        value: props.initialValue ? props.initialValue : '',
+        isValid: props.initiallyValid,
         touched: false
     });
 
-    const { onInputChange } = props; // refactoring
+    const { onInputChange,id } = props; // refactoring
 
     useEffect(() => {
         if (inputState.touched) {
-            onInputChange(inputState.value, inputState.isValid);
+            onInputChange(id,inputState.value, inputState.isValid);
         }
-    }, [inputState, onInputChange]);
+    }, [inputState, onInputChange,id]);
 
     const textChangeHandler = text => {
         const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+        const numRegex = /^\d+(\.\d{1,2})?$/;
         let isValid = true;
         if (props.required && text.trim().length === 0) {
             isValid = false;
         }
+        if (props.number && !numRegex.test(+text)) {
+            isValid = false;
+        }
         if (props.email && !emailRegex.test(text.toLowerCase())) {
+            isValid = false;
+        }
+        if (props.url && !urlRegex.test(text.toLowerCase())) {
             isValid = false;
         }
         if (props.min != null && +text < props.min) {
@@ -72,8 +81,10 @@ const Input = props => {
         onChangeText={textChangeHandler} 
         onBlur={lostFocusHandler}
         />
-    {!inputState.isValid && (
-    <Text>{props.errorText}</Text>
+    {!inputState.isValid && inputState.touched && (
+    <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{props.errorText}</Text>
+    </View>
     )}
     </View> );
 };
@@ -91,6 +102,14 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         borderBottomColor: '#ccc',
         borderBottomWidth: 1
+    },
+    errorContainer: {
+        marginVertical: 5
+    },
+    errorText: {
+        fontFamily: 'open-sans',
+        fontSize: 13,
+        color: 'red'
     }
 });
 

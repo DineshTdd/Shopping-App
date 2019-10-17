@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useReducer } from 'react';
-import { View, Platform, Alert, Text, ScrollView, TextInput, StyleSheet } from 'react-native';
+import { View, Platform, Alert, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { HeaderButtons, Item } from  'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -106,11 +106,12 @@ const EditProductScreen = props => {
     }, [dispatchFormState]);
 
     return (
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
         <ScrollView>
             <View style={styles.form}>
             <Input 
             id='title'
-            label='title'
+            label='Title'
             errorText='Please enter a valid title!'
             keyboardType='default' 
             autoCapitalize='sentences'
@@ -131,6 +132,7 @@ const EditProductScreen = props => {
             initialValue={editedProduct ? editedProduct.imageUrl : ''}
             initiallyValid={!!editedProduct}
             required
+            url
             />
             {editedProduct ? null : (
             <Input 
@@ -141,6 +143,7 @@ const EditProductScreen = props => {
             returnKeyType='next'
             onInputChange = {inputChangeHandler}
             required
+            number
             min={0.1}
             />
             )}
@@ -161,6 +164,7 @@ const EditProductScreen = props => {
             />
             </View>
         </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
