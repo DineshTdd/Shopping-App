@@ -27,6 +27,15 @@ const ProductsOverviewScreen = props => {
         setIsLoading(false);
     }, [dispatch, setIsLoading, setError]);
 
+
+    useEffect(() => {
+        const willFocusSub = props.navigation.addListener('willFocus', loadProducts );
+
+        return () => {
+            willFocusSub.remove();
+        }; // clean up subscription
+    }, [loadProducts]);
+
     useEffect(() => {
         loadProducts();
     }, [dispatch, loadProducts] );
