@@ -9,26 +9,40 @@ export const fetchProducts = () => {
 
     return async dispatch =>  {
         // redux-thunk ..any async without disturbing the flow of redux action
-        const response = await fetch('https://shoppingapprn.firebaseio.com/products.json');
-        // 'aysnc','await' are alternative to 'then' in react native used to resolve promises returned
 
-        const resData = await response.json(); 
-        const loadedProducts = [];
+        try {
+            const response = await fetch(
+                'https://shoppingapprn.firebaseio.com/products.json'
+                );
+            // 'aysnc','await' are alternative to 'then' in react native used to resolve promises returned
+    
+            if(!response.ok) {
+                throw new Error('Something went wrong!');
+            }
 
-        for (const key in resData) {
-            loadedProducts.push(new Product(
-                key,
-                'u1',
-                resData[key].title,
-                resData[key].imageUrl,
-                resData[key].description,
-                resData[key].price,
-                )
-            );
+            const resData = await response.json(); 
+            const loadedProducts = [];
+    
+            for (const key in resData) {
+                loadedProducts.push(new Product(
+                    key,
+                    'u1',
+                    resData[key].title,
+                    resData[key].imageUrl,
+                    resData[key].description,
+                    resData[key].price,
+                    )
+                );
+            }
+    
+            dispatch({ type: SET_PRODUCTS, products: loadedProducts });    
         }
-
-        dispatch({ type: SET_PRODUCTS, products: loadedProducts });
-    };
+        catch (err) {
+            //send to custom analytics server
+            throw err; 
+            // rethrowing error to productsOverviewScreen
+        }
+        };
 };
 
 

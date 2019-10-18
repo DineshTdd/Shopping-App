@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { FlatList, Platform, Button } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { FlatList, View, Text, StyleSheet, Platform, Button, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from  'react-navigation-header-buttons';
 
@@ -10,12 +10,26 @@ import * as productActions from '../../store/actions/product';
 import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
     const products = useSelector(state => state.products.availableProducts);
     const dispatch = useDispatch();
 
+    const loadProducts = useCallback( async () => {
+        setError(null);
+        setIsLoading(true);
+        try {
+            await dispatch(productActions.fetchProducts());
+        }
+        catch (err) {
+            setError(err.message);
+        }
+        setIsLoading(false);
+    }, [dispatch, setIsLoading, setError]);
+
     useEffect(() => {
-        dispatch(productActions.fetchProducts());
-    }, [dispatch] );
+        loadProducts();
+    }, [dispatch, loadProducts] );
 
     const selectItemHandler = (id, title) => {
         props.navigation.navigate('ProductDetail', { 
@@ -23,6 +37,33 @@ const ProductsOverviewScreen = props => {
             productTitle: title,
         });
     };
+
+    if(error) {
+        return (
+            <View style={styles.centered}>
+                <Text style={{ fontFamily: 'open-sans' }}>
+                    An error occured!
+                </Text>
+                <Button color={Colors.primary} title='Try again!' onPress={loadProducts}/>
+            </View>
+        );
+    }
+
+    if (isLoading) {
+        return (<View style={ styles.centered }>
+            <ActivityIndicator size='large' color={Colors.primary} />
+        </View>);
+    }
+
+    if(!isLoading && products.length === 0) {
+        return (
+            <View style={styles.centered}>
+                <Text style={{ fontFamily: 'open-sans' }}>
+                    No products found. Maybe start adding something!
+                </Text>
+            </View>
+        );
+    }
 
      return ( <FlatList 
      data = { products } 
@@ -70,5 +111,13 @@ ProductsOverviewScreen.navigationOptions = navData => {
     </HeaderButtons> )
     }
 };
+
+const styles = StyleSheet.create({
+    centered: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+});
 
 export default ProductsOverviewScreen;
