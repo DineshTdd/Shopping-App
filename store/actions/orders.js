@@ -1,4 +1,45 @@
+import Order from "../../models/order";
+
 export const ADD_ORDER = 'ADD_ORDER';
+export const SET_ORDERS= 'SET_ORDERS';
+
+export const fetchOrders = () => {
+    return async dispatch => {
+        try {
+            const response = await fetch(
+                'https://shoppingapprn.firebaseio.com/orders/u1.json'
+                );
+            // 'aysnc','await' are alternative to 'then' in react native used to resolve promises returned
+    
+            if(!response.ok) {
+                throw new Error('Something went wrong!');
+            }
+
+            const resData = await response.json(); 
+
+            const loadedOrders = [];
+    
+            for (const key in resData) {
+
+                loadedOrders.push(
+                    new Order(
+                        key,
+                        resData[key].cartItems,
+                        resData[key].totalAmount,
+                        new Date(resData[key].date)
+                        // date string is converted back to date object
+                    )
+                );
+            }
+    
+            dispatch({type: SET_ORDERS, orders: loadedOrders});
+        } catch (err) {
+            //send to custom analytics server
+            throw err; 
+            // rethrowing error to productsOverviewScreen
+        }
+    };
+};
 
 export const addOrder = (cartItems, totalAmount) => {
     return async dispatch => {
