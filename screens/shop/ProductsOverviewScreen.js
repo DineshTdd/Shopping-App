@@ -11,6 +11,7 @@ import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState();
     const products = useSelector(state => state.products.availableProducts);
     const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const ProductsOverviewScreen = props => {
         setIsLoading(false);
     }, [dispatch, setIsLoading, setError]);
 
+    //aysnc returns a promise
 
     useEffect(() => {
         const willFocusSub = props.navigation.addListener('willFocus', loadProducts );
@@ -37,7 +39,10 @@ const ProductsOverviewScreen = props => {
     }, [loadProducts]);
 
     useEffect(() => {
-        loadProducts();
+        setIsRefreshing(true);
+        loadProducts().then(() => {
+            setIsRefreshing(false);
+        });
     }, [dispatch, loadProducts] );
 
     const selectItemHandler = (id, title) => {
@@ -74,7 +79,11 @@ const ProductsOverviewScreen = props => {
         );
     }
 
-     return ( <FlatList 
+     return ( 
+     <FlatList 
+     onRefresh={loadProducts}
+     refreshing={isRefreshing}
+     // pull to refresh
      data = { products } 
      keyExtractor = { item => item.id } 
      renderItem = {itemData => (
