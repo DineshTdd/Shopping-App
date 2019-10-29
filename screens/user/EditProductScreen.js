@@ -117,7 +117,8 @@ const EditProductScreen = props => {
         props.navigation.setParams({ submit: submitHandler });
     }, [submitHandler]);
 
-    const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
+    const inputChangeHandler = useCallback(
+        (inputIdentifier, inputValue, inputValidity) => {
         dispatchFormState({
             type: FORM_INPUT_UPDATE, 
             value: inputValue,
