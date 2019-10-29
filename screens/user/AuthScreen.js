@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useState, useCallback } from 'react';
 import { ScrollView, View, Button, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,6 +39,8 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = props => {
+    const [isSignup, setIsSignup] = useState(false);
+
     const dispatch = useDispatch();
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -55,12 +57,20 @@ const AuthScreen = props => {
 
     });
 
-    const signupHandler = () => {
-        dispatch(authActions.signup(
-            formState.inputValues.email,
-            formState.inputValues.password
-            )
-        );
+    const authHandler = () => {
+        let action;
+        if (isSignup) {
+            action = authActions.signup(
+                formState.inputValues.email,
+                formState.inputValues.password
+                );
+        } else {
+            action = authActions.login(
+                formState.inputValues.email,
+                formState.inputValues.password
+                );
+        }
+        dispatch(action);
     };
 
     const inputChangeHandler = useCallback(
@@ -109,16 +119,19 @@ const AuthScreen = props => {
                 />
             <View style={styles.buttonContainer}>
             <Button 
-                title="Login" 
+                title={ isSignup ? 'Sign Up' : 'Login'} 
                 color={Colors.primary} 
-                onPress={signupHandler}
+                onPress={authHandler}
             />
             </View>
             <View style={styles.buttonContainer}>
             <Button 
-                title="Switch to Sign Up" 
+                title= {`Switch to ${isSignup ? 'Login': 'Sign Up'}`} 
                 color={Colors.accent} 
-                onPress={() => {}}
+                onPress={() => {
+                    setIsSignup(prevState => !prevState); 
+                    //get current state and invert it
+                }}
             />
             </View>
             </ScrollView>
