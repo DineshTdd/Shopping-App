@@ -1,4 +1,4 @@
-import apikey from '../../data/apikey';
+import {apikey} from '../../data/apikey';
 
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
@@ -34,11 +34,12 @@ export const signup = (email, password) => {
 
     const resData = await response.json();
 
-    dispatch({ type: SIGNUP });
+    dispatch({ type: SIGNUP, token: resData.idToken, userId: resData.localId});
   };
 };
 
 export const login = (email, password) => {
+    //console.log(apikey);
     return async dispatch => {
         const response = await fetch(
             `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apikey}`,
@@ -58,6 +59,7 @@ export const login = (email, password) => {
     if(!response.ok) {
         const errorResData = await response.json();
         const errorId = errorResData.error.message;
+        //console.log(errorResData.error);
         let message = 'Something went wrong!';
         if(errorId === 'EMAIL_NOT_FOUND') {
             message = 'This email could not be found!';
@@ -68,6 +70,6 @@ export const login = (email, password) => {
     }
 
     const resData = await response.json();
-    dispatch({ type: LOGIN });
+    dispatch({ type: LOGIN, token: resData.idToken, userId: resData.localId });
   };
 };
