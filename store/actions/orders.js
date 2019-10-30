@@ -4,10 +4,11 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS= 'SET_ORDERS';
 
 export const fetchOrders = () => {
-    return async dispatch => {
+    return async (dispatch, getState )=> {
+        const userId = getState().auth.userId;
         try {
             const response = await fetch(
-                'https://shoppingapprn.firebaseio.com/orders/u1.json'
+                `https://shoppingapprn.firebaseio.com/orders/${userId}.json`
                 );
             // 'aysnc','await' are alternative to 'then' in react native used to resolve promises returned
     
@@ -42,9 +43,14 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, totalAmount) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
+        // redux thunk allows us to get current snapshot of the redux store state
+        const token = getState().auth.token;
+        const userId = getState().auth.userId;
         const date = new Date();
-        const response = await fetch('https://shoppingapprn.firebaseio.com/orders/u1.json', {
+        const response = await fetch(
+            `https://shoppingapprn.firebaseio.com/orders/${userId}.json?auth=${token}`, 
+        {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
