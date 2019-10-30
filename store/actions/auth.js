@@ -1,10 +1,12 @@
+import apikey from '../../data/apikey';
+
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 
 export const signup = (email, password) => {
     return async dispatch => {
         const response = await fetch(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBhjUmxX7kThANn6UgQNyCwJn_hDTXQ7bs',
+            `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apikey}`,
         {
             method: 'POST',
             headers: {
@@ -39,7 +41,7 @@ export const signup = (email, password) => {
 export const login = (email, password) => {
     return async dispatch => {
         const response = await fetch(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBhjUmxX7kThANn6UgQNyCwJn_hDTXQ7bs',
+            `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apikey}`,
         {
             method: 'POST',
             headers: {
