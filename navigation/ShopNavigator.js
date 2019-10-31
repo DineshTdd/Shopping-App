@@ -6,8 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { DrawerNavigatorItems, createDrawerNavigator } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
-// import SafeAreaView from 'react-native-safe-area-view';
-// import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductsDetailScreen';
@@ -18,6 +17,8 @@ import EditProductScreen from '../screens/user/EditProductScreen';
 import AuthScreen from  '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import Colors from '../constants/Colors';
+
+import * as authActions from '../store/actions/auth';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -82,7 +83,9 @@ const AdminNavigator = createStackNavigator({
     defaultNavigationOptions: defaultNavOptions
 });
 
-const Logout = (props) => (
+const customDrawerComponent = (props) => {
+    const dispatch = useDispatch();
+    return (
     <SafeAreaView 
         forceInset={{ top: 'always', horizontal: 'never' }}
         style={styles.container}>
@@ -102,11 +105,16 @@ const Logout = (props) => (
         size = {23}
         color='blue'
         />}
-        buttonStyle={styles.buttonstyle} title="Logout" onPress={() => {}} />
+        buttonStyle={styles.buttonstyle} 
+        title="Logout" 
+        onPress={() => {
+            dispatch(authActions.logout());
+            props.navigation.navigate('Auth');
+        }} />
     </View>
     </SafeAreaView>
   )
-
+};
 const ShopNavigator = createDrawerNavigator({
     Products: ProductsNavigator,
     Orders: OrdersNavigator,
@@ -115,7 +123,7 @@ const ShopNavigator = createDrawerNavigator({
     contentOptions: {
         activetintColor: Colors.primary
     },
-    contentComponent: Logout,
+    contentComponent: customDrawerComponent,
 });
 
 const AuthNavigator = createStackNavigator({
