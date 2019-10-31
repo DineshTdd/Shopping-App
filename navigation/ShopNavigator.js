@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-import { Platform } from 'react-native';
+import { createAppContainer, createSwitchNavigator, SafeAreaView } from 'react-navigation';
+import { DrawerItems, createDrawerNavigator } from 'react-navigation-drawer';
+import { View, Platform, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -88,6 +88,16 @@ const ShopNavigator = createDrawerNavigator({
 }, {
     contentOptions: {
         activetintColor: Colors.primary
+    },
+    contentComponent: props => {
+        return (
+            <View style={{ flex: 1 }}>
+                <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+                    <DrawerItems {...props} />
+                    <Button title="Logout" color={ Colors.primary } onPress={() => {}} />
+                </SafeAreaView>
+        </View>
+        );
     }
 });
 
