@@ -1,11 +1,12 @@
 import React from 'react';
 
+import { SafeAreaView, View, Image, StyleSheet, Platform, Button, ScrollView } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer, createSwitchNavigator, SafeAreaView } from 'react-navigation';
-import { DrawerItems, createDrawerNavigator } from 'react-navigation-drawer';
-import { View, Platform, Button } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { DrawerNavigatorItems, createDrawerNavigator } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
-
+// import SafeAreaView from 'react-native-safe-area-view';
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductsDetailScreen';
@@ -16,7 +17,6 @@ import EditProductScreen from '../screens/user/EditProductScreen';
 import AuthScreen from  '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import Colors from '../constants/Colors';
-
 
 const defaultNavOptions = {
     headerStyle: {
@@ -81,6 +81,21 @@ const AdminNavigator = createStackNavigator({
     defaultNavigationOptions: defaultNavOptions
 });
 
+const Logout = (props) => (
+    <SafeAreaView 
+        forceInset={{ top: 'always', horizontal: 'never' }}
+        style={styles.container}>
+        <View style={styles.imgview}>
+            <Image source={require('../assets/shop.png')}
+            style={styles.img}/>
+        </View>
+    <ScrollView contentContainerStyle = {{ paddingTop: 20 }} >
+        <DrawerNavigatorItems {...props} /> 
+    {/* to add existing drawer items */ }
+    </ScrollView>
+    </SafeAreaView>
+  )
+
 const ShopNavigator = createDrawerNavigator({
     Products: ProductsNavigator,
     Orders: OrdersNavigator,
@@ -89,16 +104,7 @@ const ShopNavigator = createDrawerNavigator({
     contentOptions: {
         activetintColor: Colors.primary
     },
-    contentComponent: props => {
-        return (
-            <View style={{ flex: 1 }}>
-                <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-                    <DrawerItems {...props} />
-                    <Button title="Logout" color={ Colors.primary } onPress={() => {}} />
-                </SafeAreaView>
-        </View>
-        );
-    }
+    contentComponent: Logout,
 });
 
 const AuthNavigator = createStackNavigator({
@@ -112,5 +118,23 @@ const MainNavigator = createSwitchNavigator({
     Auth: AuthNavigator,
     Shop: ShopNavigator
 });
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    imgview: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 20,
+        height: 150,
+        backgroundColor: 'white'
+    },
+    img: {
+        height: 120,
+        width: 120,
+        borderRadius: 60
+    },
+  });
 
 export default createAppContainer(MainNavigator);
