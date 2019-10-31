@@ -53,6 +53,7 @@ const UserProductsScreen = props => {
                         editProductHandler(itemData.item.id);
                     }}
                 >
+                <View style={{ alignContent: 'stretch', justifyContent:'space-evenly' }}>
                 <Button 
                     color={Colors.primary} 
                     title="Edit" 
@@ -60,6 +61,7 @@ const UserProductsScreen = props => {
                         editProductHandler(itemData.item.id);
                     }}
                 />
+                </View>
                 <Button 
                     color={Colors.primary}
                     title="Delete" 

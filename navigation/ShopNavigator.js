@@ -93,8 +93,10 @@ const customDrawerComponent = (props) => {
             <Image source={require('../assets/shop.png')}
             style={styles.img}/>
         </View>
-    <ScrollView contentContainerStyle = {{ paddingTop: 20 }} >
+    <ScrollView contentContainerStyle = {{ padding: 20 }} >
+        <View style={{ flex: 2, justifyContent: 'space-around' }}>
         <DrawerNavigatorItems {...props} /> 
+        </View>
     {/* to add existing drawer items */ }
     </ScrollView>
     <View style={styles.buttoncontainer}>
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        height: 150,
+        height: 200,
         backgroundColor: Colors.primary
     },
     img: {
