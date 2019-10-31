@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { SafeAreaView, View, Image, StyleSheet, Platform, Button, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
+import { SafeAreaView, View, Image, StyleSheet, Platform, ScrollView } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { DrawerNavigatorItems, createDrawerNavigator } from 'react-navigation-drawer';
@@ -93,6 +94,16 @@ const Logout = (props) => (
         <DrawerNavigatorItems {...props} /> 
     {/* to add existing drawer items */ }
     </ScrollView>
+    <View style={styles.buttoncontainer}>
+    <Button 
+        type="outline"
+        icon={<Ionicons 
+        name={Platform.OS === 'android' ? 'md-exit' : 'ios-exit'}
+        size = {23}
+        color='blue'
+        />}
+        buttonStyle={styles.buttonstyle} title="Logout" onPress={() => {}} />
+    </View>
     </SafeAreaView>
   )
 
@@ -126,15 +137,25 @@ const styles = StyleSheet.create({
     imgview: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 20,
+        padding: 20,
         height: 150,
-        backgroundColor: 'white'
+        backgroundColor: Colors.primary
     },
     img: {
         height: 120,
         width: 120,
         borderRadius: 60
     },
+    buttoncontainer: {
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white'
+    },
+    buttonstyle: {
+        width: '80%',
+        justifyContent: 'space-around'
+    }
   });
 
 export default createAppContainer(MainNavigator);
