@@ -7,7 +7,6 @@ class Order {
         this.items = items;
         this.totalAmount = totalAmount;
     }
-
     get readableDate() {
         // return this.date.toLocaleDateString('en-EN', {
         //     year: 'numeric',
@@ -16,7 +15,7 @@ class Order {
         //     hour: '2-digit',
         //     minute: '2-digit'
         // }); supports JS engine in IOS only
-        return moment().format('MMMM Do YYYY, hh:mm a');
+        return moment(this.date).format('MMMM Do YYYY, hh:mm a');
     }
 }
 

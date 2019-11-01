@@ -2,6 +2,7 @@
   "expo": {
     "name": "ShoppingApp",
     "slug": "shopping-app",
+    "owner": "dineshtd",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -10,8 +11,10 @@
       "web"
     ],
     "version": "1.0.0",
+    "description": "Surf through the products and kick something into the cart!",
+    "githubUrl": "https://github.com/DineshTdd/Shopping-App",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/shop.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -25,6 +28,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.td.shopapp"
     }
   }
 }

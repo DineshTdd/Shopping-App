@@ -21,13 +21,14 @@ export const fetchOrders = () => {
             const loadedOrders = [];
     
             for (const key in resData) {
-
+                console.log(resData[key].date)
+                console.log(new Date(resData[key].date).toISOString())
                 loadedOrders.push(
                     new Order(
                         key,
                         resData[key].cartItems,
                         resData[key].totalAmount,
-                        new Date(resData[key].date)
+                        new Date(resData[key].date).toISOString()
                         // date string is converted back to date object
                     )
                 );
