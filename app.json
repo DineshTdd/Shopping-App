@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Surf through the products and kick something into the cart!",
     "githubUrl": "https://github.com/DineshTdd/Shopping-App",
     "orientation": "portrait",

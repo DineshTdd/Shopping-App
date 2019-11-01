@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View, FlatList, Platform, Text} from 'react-native';
+import React, { useEffect, useCallback, useState } from 'react';
+import { ActivityIndicator, Button, StyleSheet, View, FlatList, Platform, Text} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
 
@@ -11,18 +11,51 @@ import Colors from '../../constants/Colors';
 
 const OrdersScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [error, setError] = useState();
 
     const orders = useSelector(state => state.orders.orders);
     const dispatch = useDispatch();
     //dispatch actions using react-redux 
 
-    useEffect(() => {
+    const loadOrders = useCallback( async () => {
+        setError(null);
         setIsLoading(true);
-        dispatch(ordersActions.fetchOrders()).then(() => {
-            setIsLoading(false);
+        try {
+            await dispatch(ordersActions.fetchOrders());
+        }
+        catch (err) {
+            setError(err.message);
+        }
+        setIsLoading(false);
+    }, [dispatch, setIsLoading, setError]);
+
+    useEffect(() => {
+        const willFocusSub = props.navigation.addListener('willFocus', loadOrders );
+
+        return () => {
+            willFocusSub.remove();
+        }; // clean up subscription
+    }, [loadOrders]);
+
+    useEffect(() => {
+        setIsRefreshing(true);
+        loadOrders().then(() => {
+            setIsRefreshing(false);
         });
         // similar to async await
-    }, [dispatch]);
+    }, [dispatch, loadOrders]);
+
+    if(error) {
+        return (
+            <View style={styles.centered}>
+                <Text style={{ fontFamily: 'open-sans' }}>
+                    An error occured!
+                </Text>
+                <Button color={Colors.primary} title='Try again!' onPress={loadOrders}/>
+            </View>
+        );
+    }
 
     if(isLoading) {
         return (
@@ -44,6 +77,8 @@ const OrdersScreen = props => {
 
     return (
     <FlatList 
+    onRefresh={loadOrders}
+    refreshing={isRefreshing}
     data ={orders}
     keyExtractor={item => item.id} 
     renderItem={itemData => 

@@ -21,8 +21,8 @@ export const fetchOrders = () => {
             const loadedOrders = [];
     
             for (const key in resData) {
-                console.log(resData[key].date)
-                console.log(new Date(resData[key].date).toISOString())
+                //console.log(resData[key].date)
+                //console.log(new Date(resData[key].date).toISOString())
                 loadedOrders.push(
                     new Order(
                         key,
